@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World</title>
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 30%, #222 0%, #111 100%);
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hello-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+      z-index: 1;
+    }
+    .glow {
+      font-size: 5rem;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #fff;
+      letter-spacing: 0.1em;
+      text-shadow:
+        0 0 20px #00ffe7,
+        0 0 40px #00ffe7,
+        0 0 80px #00ffe7,
+        0 0 160px #00ffe7;
+      animation: helloIn 2s cubic-bezier(.68,-0.55,.27,1.55) forwards, glow 2s 2s infinite alternate;
+      opacity: 0;
+      transform: scale(0.8) rotateX(90deg);
+    }
+    @keyframes helloIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) rotateX(90deg);
+        filter: blur(10px);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1.1) rotateX(-10deg);
+        filter: blur(2px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotateX(0deg);
+        filter: blur(0);
+      }
+    }
+    @keyframes glow {
+      from {
+        text-shadow:
+          0 0 20px #00ffe7,
+          0 0 40px #00ffe7,
+          0 0 80px #00ffe7,
+          0 0 160px #00ffe7;
+      }
+      to {
+        text-shadow:
+          0 0 40px #ff00c8,
+          0 0 80px #ff00c8,
+          0 0 160px #ff00c8,
+          0 0 320px #ff00c8;
+      }
+    }
+    .particles {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: float 6s linear infinite;
+    }
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+    /* Explosion styles */
+    .explosion {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    .explosion-circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: explode 1s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    @keyframes explode {
+      0% {
+        transform: scale(0.1);
+        opacity: 1;
+        filter: blur(2px);
+      }
+      80% {
+        opacity: 1;
+        filter: blur(0);
+      }
+      100% {
+        transform: scale(2.5);
+        opacity: 0;
+        filter: blur(6px);
+      }
+    }
+    /* Sparkle styles */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 20;
+      animation: sparkle 1.2s linear forwards;
+    }
+    @keyframes sparkle {
+      0% {
+        opacity: 1;
+        transform: scale(0.5);
+      }
+      80% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.2);
+      }
+    }
+    /* Shooting star styles */
+    .shooting-star {
+      position: absolute;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(180deg, #fff 0%, #00ffe7 100%);
+      opacity: 0.7;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 30;
+      animation: shoot 1.5s linear forwards;
+    }
+    @keyframes shoot {
+      0% {
+        opacity: 0;
+        transform: translateY(-100px) scaleY(0.5) rotate(-20deg);
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(700px) scaleY(1.2) rotate(-20deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hello-container">
+    <div class="glow">Hello, World!</div>
+    <div class="particles"></div>
+    <div class="explosions"></div>
+  </div>
+  <script>
+    // Particle background
+    const colors = ['#00ffe7', '#ff00c8', '#fff', '#00f0ff', '#ffb300'];
+    const particles = document.querySelector('.particles');
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 18 + 8;
+      p.style.width = `${size}px`;
+      p.style.height = `${size}px`;
+      p.style.left = `${Math.random() * 100}%`;
+      p.style.animationDelay = `${Math.random() * 6}s`;
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      particles.appendChild(p);
+    }
+
+    // Explosions and sparkles
+    const explosions = document.querySelector('.explosions');
+    function createExplosion(x, y) {
+      // Main explosion circles
+      for (let i = 0; i < 6; i++) {
+        const circle = document.createElement('div');
+        circle.className = 'explosion explosion-circle';
+        const size = Math.random() * 80 + 60;
+        circle.style.width = `${size}px`;
+        circle.style.height = `${size}px`;
+        circle.style.left = `calc(50% + ${x - window.innerWidth/2}px)`;
+        circle.style.top = `calc(50% + ${y - window.innerHeight/2}px)`;
+        circle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        circle.style.opacity = 0.5 + Math.random() * 0.5;
+        circle.style.animationDelay = `${Math.random() * 0.2}s`;
+        explosions.appendChild(circle);
+        setTimeout(() => explosions.removeChild(circle), 1200);
+      }
+      // Sparkles
+      for (let i = 0; i < 24; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        const angle = Math.random() * 2 * Math.PI;
+        const radius = Math.random() * 80 + 40;
+        sparkle.style.left = `calc(50% + ${x - window.innerWidth/2 + Math.cos(angle)*radius}px)`;
+        sparkle.style.top = `calc(50% + ${y - window.innerHeight/2 + Math.sin(angle)*radius}px)`;
+        sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        sparkle.style.animationDelay = `${Math.random() * 0.2}s`;
+        explosions.appendChild(sparkle);
+        setTimeout(() => explosions.removeChild(sparkle), 1300);
+      }
+    }
+
+    // Shooting stars
+    function createShootingStar() {
+      const star = document.createElement('div');
+      star.className = 'shooting-star';
+      const left = Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1;
+      star.style.left = `${left}px`;
+      star.style.top = `-${Math.random() * 100 + 20}px`;
+      star.style.background = `linear-gradient(180deg, #fff 0%, ${colors[Math.floor(Math.random()*colors.length)]} 100%)`;
+      explosions.appendChild(star);
+      setTimeout(() => explosions.removeChild(star), 1600);
+    }
+
+    // Initial epic explosion on load
+    setTimeout(() => {
+      createExplosion(window.innerWidth/2, window.innerHeight/2);
+    }, 1200);
+
+    // Random explosions every few seconds
+    setInterval(() => {
+      const x = Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1;
+      const y = Math.random() * window.innerHeight * 0.7 + window.innerHeight * 0.15;
+      createExplosion(x, y);
+    }, 2500);
+
+    // Shooting stars at random intervals
+    setInterval(() => {
+      createShootingStar();
+    }, 1800);
+
+    // Click for more explosions!
+    document.body.addEventListener('click', e => {
+      createExplosion(e.clientX, e.clientY);
+    });
+  </script>
+</body>
