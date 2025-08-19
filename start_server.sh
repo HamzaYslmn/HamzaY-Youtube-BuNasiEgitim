@@ -1,24 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# -------------------- ZRAM Setup --------------------
-# Configure and enable zram swap (compressed RAM disk)
-if command -v zramctl >/dev/null 2>&1; then
-    echo "Configuring zram swap..."
-    ZRAM_SIZE="128M"
-    zramctl --find --size $ZRAM_SIZE
-    ZRAM_DEV=$(zramctl --list | awk 'NR==2{print $1}')
-    if [ -n "$ZRAM_DEV" ]; then
-        mkswap "$ZRAM_DEV"
-        swapon "$ZRAM_DEV"
-        echo "zram swap enabled on $ZRAM_DEV ($ZRAM_SIZE)"
-    else
-        echo "Failed to configure zram device" >&2
-    fi
-else
-    echo "zramctl not found, skipping zram swap setup."
-fi
-
 declare -a SERVICE_PIDS=()
 
 wait_for_port() {
