@@ -20,8 +20,8 @@ WORKDIR /app
 RUN pip install --no-cache-dir uv
 
 # Install Python dependencies
-COPY BackEnd/analyze/requirements.txt ./BackEnd/analyze/requirements.txt
-RUN uv pip install --system -r ./BackEnd/analyze/requirements.txt
+COPY BackEnd/requirements.txt ./BackEnd/requirements.txt
+RUN uv pip install --system -r ./BackEnd/requirements.txt
 
 # Copy backend code
 COPY ./BackEnd/ ./BackEnd/
@@ -34,12 +34,11 @@ COPY ./FrontEnd/ ./FrontEnd/
 COPY /nginx.conf /etc/nginx/nginx.conf
 
 # Copy and prepare startup script
-COPY ./BackEnd/start_server.sh ./BackEnd/start_server.sh
-RUN sed -i 's/\r$//' ./BackEnd/start_server.sh && chmod +x ./BackEnd/start_server.sh
+COPY ./start_server.sh ./start_server.sh
+RUN sed -i 's/\r$//' ./start_server.sh && chmod +x ./start_server.sh
 
 # Expose NGINX port
 EXPOSE 8080
 
 # Start server
-WORKDIR /app/BackEnd
 CMD ["./start_server.sh"]
