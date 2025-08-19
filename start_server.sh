@@ -54,7 +54,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-start_service "Backend" "./Backend" 8001
+start_service "BackEnd" "./BackEnd" 8001
 start_nginx 8080
 
 wait "${SERVICE_PIDS[@]}"
