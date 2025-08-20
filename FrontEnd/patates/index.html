@@ -179,8 +179,25 @@
 		Onlar epik, eğlenceli ve animasyonlu bir dünyada yaşıyorlar.<br>
 		Bu site, patateslerin en havalı hallerini keşfetmen için tasarlandı.
 	</div>
+	<div id="patates-count" style="text-align:center; color:#fff; font-size:1.3rem; margin-top:18px; text-shadow:0 2px 8px #b97a1a88;"></div>
 	<div style="text-align:center;">
 		<button class="btn" onclick="alert('Patatesler seni seviyor! 🥔❤️')">Patatesleri Kutla!</button>
 	</div>
+</body>
+<script>
+// Patates sayısını API'den çekip ekrana yaz
+fetch('/api/patates')
+	.then(r => r.json())
+	.then(data => {
+		if (typeof data.adet !== 'undefined') {
+			document.getElementById('patates-count').textContent = `Mevcut tatlı patates sayısı: ${data.adet}`;
+		} else {
+			document.getElementById('patates-count').textContent = 'Patates sayısı alınamadı.';
+		}
+	})
+	.catch(() => {
+		document.getElementById('patates-count').textContent = 'Patates sayısı alınamadı.';
+	});
+</script>
 </body>
 </html>
