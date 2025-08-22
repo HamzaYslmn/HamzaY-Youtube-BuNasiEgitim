@@ -214,10 +214,12 @@
       if (value?.error){
         price.innerHTML = `<span style="color: var(--error); font-weight:800;">${value.error}</span>`;
       } else if (Array.isArray(value?.data) && value.data.length){
-        const last = value.data[value.data.length-1] || {};
-        const p = last.satis ?? last.alis ?? '-';
+        // Find the entry with the latest kayit_tarihi
+        const sorted = value.data.slice().sort((a, b) => new Date(b.kayit_tarihi) - new Date(a.kayit_tarihi));
+        const latest = sorted[0] || {};
+        const p = latest.satis ?? latest.alis ?? '-';
         price.textContent = `${p} TL`;
-        when.textContent = last.kayit_tarihi ? new Date(last.kayit_tarihi).toLocaleString('tr-TR') : '';
+        when.textContent = latest.kayit_tarihi ? new Date(latest.kayit_tarihi).toLocaleString('tr-TR') : '';
         // meta info (yuksek/dusuk)
         if (value.meta) {
           const b1 = document.createElement('span'); b1.className='badge'; b1.textContent = `Yüksek: ${value.meta.yuksek}`;
