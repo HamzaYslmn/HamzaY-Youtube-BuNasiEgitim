@@ -213,13 +213,17 @@
 
       if (value?.error){
         price.innerHTML = `<span style="color: var(--error); font-weight:800;">${value.error}</span>`;
-      } else if (Array.isArray(value) && value.length){
-        const last = value[value.length-1] || {};
-        const p = last.son ?? last.alis ?? '-';
+      } else if (Array.isArray(value?.data) && value.data.length){
+        const last = value.data[value.data.length-1] || {};
+        const p = last.satis ?? last.alis ?? '-';
         price.textContent = `${p} TL`;
-        when.textContent = last.tarih ? new Date(last.tarih).toLocaleString('tr-TR') : '';
-        const src = last.kaynak || '—';
-        const b = document.createElement('span'); b.className='badge'; b.textContent = `kaynak: ${src}`; meta.appendChild(b);
+        when.textContent = last.kayit_tarihi ? new Date(last.kayit_tarihi).toLocaleString('tr-TR') : '';
+        // meta info (yuksek/dusuk)
+        if (value.meta) {
+          const b1 = document.createElement('span'); b1.className='badge'; b1.textContent = `Yüksek: ${value.meta.yuksek}`;
+          const b2 = document.createElement('span'); b2.className='badge'; b2.textContent = `Düşük: ${value.meta.dusuk}`;
+          meta.appendChild(b1); meta.appendChild(b2);
+        }
       } else {
         price.textContent = '-';
       }
