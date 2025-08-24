@@ -36,7 +36,7 @@ def parse_grid(grid_str):
     raise ValueError("Geçersiz grid formatı")
 
 if __name__ == "__main__":
-    in_path = input("Görselin dosya yolunu girin: ").strip()
+    in_path = input("Görselin dosya yolunu veya klasörünü girin: ").strip()
     if not in_path:
         print("Dosya yolu verilmedi. Çıkılıyor.")
     else:
@@ -49,8 +49,20 @@ if __name__ == "__main__":
 
         out_dir = input("Çıktı klasörü (boş bırakırsanız giriş dosyası klasörü kullanılır): ").strip() or None
         try:
-            split_image(in_path, rows, cols, out_dir)
+            if os.path.isdir(in_path):
+                # Klasördeki tüm png dosyalarını işle
+                files = [f for f in os.listdir(in_path) if f.lower().endswith('.png')]
+                if not files:
+                    print("Klasörde png dosyası bulunamadı.")
+                for fname in files:
+                    fpath = os.path.join(in_path, fname)
+                    try:
+                        split_image(fpath, rows, cols, out_dir)
+                    except Exception as e:
+                        print(f"Hata ({fname}):", e)
+            else:
+                split_image(in_path, rows, cols, out_dir)
         except FileNotFoundError:
-            print("Dosya bulunamadı:", in_path)
+            print("Dosya veya klasör bulunamadı:", in_path)
         except Exception as e:
             print("Hata:", e)
